@@ -40,10 +40,21 @@ class ClientHandler extends Thread {
             while ((text = reader.readLine()) != null) {
                 System.out.println("Received: " + text);
 
-                // Echo the received message back to the client
-                writer.println("Server: " + text);
+                // Process the input as a math equation
+                MathSolver.MathResult result = MathSolver.solveEquation(text);
 
-                // Exit if the client sends "bye"
+                // Format the response based on the result
+                String response;
+                if (result.getStatusCode() == MathSolver.MathResult.SUCCESS) {
+                    response = "Result: " + result.getValue();
+                } else {
+                    response = "Error: " + result.getStatusMessage();
+                }
+
+                // Send the response back to the client
+                writer.println(response);
+
+                // Exit if the client sends "exit"
                 if ("exit".equalsIgnoreCase(text)) {
                     System.out.println("Client disconnected");
                     break;
